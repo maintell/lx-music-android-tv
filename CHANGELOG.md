@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [2.0.0](https://github.com/maintell/lx-music-android-tv/compare/v1.8.4...v2.0.0) - 2026-08-18
+
+适配 Android TV 的洛雪音乐（LX Music）移动版 fork：聚焦遥控器操作与 TV 布局优化。
+
+本版本基于上游 1.8.4，主要变更：
+
+### 新增
+- TV 适配层：遥控器焦点导航（Focusable）、远程按键处理、TV 分页视图
+
+### 变更
+- 升级检测与项目地址切换至 maintell/lx-music-android-tv
+- 移除上游专属的版本信息源（npm registry、gitee、stsky）
+
+### 其他
+- 开发者文档体系重建（docs/，18 篇）
+
 ## [1.8.4](https://github.com/lyswhut/lx-music-mobile/compare/v1.8.3...v1.8.4) - 2026-05-01
 
 我们很高兴地宣布新项目 Any Listen 的桌面版已发布，目前已支持列表跟随本地文件自动更新、加载并播放WebDAV上的歌曲等功能，更多功能仍在积极开发中，桌面版与Web版将同步更新。
