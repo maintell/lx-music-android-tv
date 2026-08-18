@@ -14,13 +14,9 @@ const abis = [
 
 const address = [
   [`https://raw.githubusercontent.com/${author.name}/${name}/master/publish/version.json`, 'direct'],
-  ['https://registry.npmjs.org/lx-music-mobile-version-info/latest', 'npm'],
   [`https://cdn.jsdelivr.net/gh/${author.name}/${name}/publish/version.json`, 'direct'],
   [`https://fastly.jsdelivr.net/gh/${author.name}/${name}/publish/version.json`, 'direct'],
   [`https://gcore.jsdelivr.net/gh/${author.name}/${name}/publish/version.json`, 'direct'],
-  ['https://registry.npmmirror.com/lx-music-mobile-version-info/latest', 'npm'],
-  ['https://gitee.com/lyswhut/lx-music-mobile-versions/raw/master/version.json', 'direct'],
-  ['http://cdn.stsky.cn/lx-music/mobile/version.json', 'direct'],
 ]
 
 
@@ -45,28 +41,9 @@ const getDirectInfo = async(url) => {
   })
 }
 
-const getNpmPkgInfo = async(url) => {
-  return request(url).then(json => {
-    if (!json.versionInfo) throw new Error('failed')
-    const info = JSON.parse(json.versionInfo)
-    if (info.version == null) throw new Error('failed')
-    return info
-  })
-}
-
 export const getVersionInfo = async(index = 0) => {
-  const [url, source] = address[index]
-  let promise
-  switch (source) {
-    case 'direct':
-      promise = getDirectInfo(url)
-      break
-    case 'npm':
-      promise = getNpmPkgInfo(url)
-      break
-  }
-
-  return promise.catch(async(err) => {
+  const [url] = address[index]
+  return getDirectInfo(url).catch(async(err) => {
     index++
     if (index >= address.length) throw err
     return getVersionInfo(index)
@@ -87,7 +64,7 @@ let apkSavePath
 export const downloadNewVersion = async(version, onDownload = noop) => {
   const abi = await getTargetAbi()
   const url = `https://github.com/${author.name}/${name}/releases/download/v${version}/${name}-v${version}-${abi}.apk`
-  let savePath = temporaryDirectoryPath + '/lx-music-mobile.apk'
+  let savePath = temporaryDirectoryPath + `/${name}-v${version}-${abi}.apk`
 
   if (downloadJobId) stopDownload(downloadJobId)
 
