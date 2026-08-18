@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
+import Focusable from '@/tv/Focusable'
 import Text from '@/components/common/Text'
 import { useMyList } from '@/store/list/hook'
 import ListItem, { styles as listStyles } from './ListItem'
@@ -35,12 +36,12 @@ const EditListItem = ({ itemWidth }: {
 
   return (
     <View style={{ ...listStyles.listItem, width: itemWidth }}>
-      <TouchableOpacity
+      <Focusable
         style={{ ...listStyles.button, borderColor: theme['c-primary-light-200-alpha-700'], borderStyle: 'dashed' }}
         onPress={() => { setEdit(true) }}
       >
         <Text style={{ opacity: isEdit ? 0 : 1 }} numberOfLines={1} size={14} color={theme['c-button-font']}>{t('list_create')}</Text>
-      </TouchableOpacity>
+      </Focusable>
       {
         isEdit
           ? <CreateUserList isEdit={isEdit} onHide={() => { setEdit(false) }} />

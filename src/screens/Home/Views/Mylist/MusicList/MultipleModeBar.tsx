@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react'
-import { Animated, View, TouchableOpacity } from 'react-native'
+import { Animated, View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 
 import Text from '@/components/common/Text'
 import Button from '@/components/common/Button'
@@ -123,12 +124,12 @@ export default forwardRef<MultipleModeBarType, MultipleModeBarProps>(({ onSelect
             <Text color={theme['c-button-font']}>{global.i18n.t('list_select_range')}</Text>
           </Button>
         </View>
-        <TouchableOpacity onPress={handleSelectAll} style={styles.btn}>
+        <Focusable onPress={handleSelectAll} style={styles.btn}>
           <Text color={theme['c-button-font']}>{global.i18n.t(isSelectAll ? 'list_select_unall' : 'list_select_all')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onExitSelectMode} style={styles.btn}>
+        </Focusable>
+        <Focusable onPress={onExitSelectMode} style={styles.btn}>
           <Text color={theme['c-button-font']}>{global.i18n.t('list_select_cancel')}</Text>
-        </TouchableOpacity>
+        </Focusable>
       </Animated.View>
     )
   }, [animaStyle, selectMode, theme, handleSelectAll, isSelectAll, onExitSelectMode, onSwitchMode])

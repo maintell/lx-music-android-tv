@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 // import Button from '@/components/common/Button'
 // import { navigations } from '@/navigation'
 // import { BorderWidths } from '@/theme'
@@ -14,6 +14,7 @@ import { scaleSizeH } from '@/utils/pixelRatio'
 import { HEADER_HEIGHT } from '@/config/constant'
 import { type InitState as CommonState } from '@/store/common/state'
 import SearchTypeSelector from '@/screens/Home/Views/Search/SearchTypeSelector'
+import Focusable from '@/tv/Focusable'
 
 const headerComponents: Partial<Record<CommonState['navActiveId'], React.ReactNode>> = {
   nav_search: <SearchTypeSelector />,
@@ -43,12 +44,12 @@ const LeftHeader = () => {
       paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
-        <TouchableOpacity style={styles.btn} onPress={openMenu}>
+        <Focusable style={styles.btn} onPress={openMenu} onMenu={openMenu}>
           <Icon color={theme['c-font']} name="menu" size={18} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
+        </Focusable>
+        <Focusable style={styles.titleBtn} onPress={openMenu}>
           <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
-        </TouchableOpacity>
+        </Focusable>
       </View>
       {headerComponents[id] ?? null}
 
@@ -82,14 +83,14 @@ const RightHeader = () => {
       paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
-        <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
+        <Focusable style={styles.titleBtn} onPress={openMenu}>
           <Text style={styles.rightTitle} size={18}>{t(id)}</Text>
-        </TouchableOpacity>
+        </Focusable>
       </View>
       {headerComponents[id] ?? null}
-      <TouchableOpacity style={styles.btn} onPress={openMenu}>
+      <Focusable style={styles.btn} onPress={openMenu} onMenu={openMenu}>
         <Icon color={theme['c-font']} name="menu" size={18} />
-      </TouchableOpacity>
+      </Focusable>
       {/* <TouchableOpacity style={styles.btn} onPress={openSetting}>
         <Icon style={{ ...styles.btnText, color: theme['c-font'] }} name="setting" size={styles.btnText.fontSize} />
       </TouchableOpacity> */}

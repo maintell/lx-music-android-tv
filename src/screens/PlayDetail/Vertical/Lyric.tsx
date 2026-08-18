@@ -319,6 +319,7 @@ export default () => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={spaceComponent}
         ListFooterComponent={spaceComponent}
+        focusable
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={onScrollEndDrag}
         fadingEdgeLength={100}

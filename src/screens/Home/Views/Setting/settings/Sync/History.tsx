@@ -1,5 +1,6 @@
 import { memo, useRef, useState, useCallback, useImperativeHandle, forwardRef } from 'react'
-import { View, TouchableOpacity, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
+import Focusable from '@/tv/Focusable'
 // import { gzip, ungzip } from 'pako'
 import { Icon } from '@/components/common/Icon'
 
@@ -39,12 +40,12 @@ const HistoryListItem = ({ item, index, onRemove, onSelect }: {
 
   return (
     <View style={{ ...styles.listItem, borderBottomColor: theme['c-border-background'] }}>
-      <TouchableOpacity style={styles.listName} onPress={handleSetHost}>
+      <Focusable style={styles.listName} onPress={handleSetHost}>
         <Text numberOfLines={1}>{item}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleRemove} style={styles.listBtn}>
+      </Focusable>
+      <Focusable onPress={handleRemove} style={styles.listBtn}>
         <Icon name="remove" color={theme['c-font-label']} size={12} />
-      </TouchableOpacity>
+      </Focusable>
     </View>
   )
 }

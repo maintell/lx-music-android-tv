@@ -1,5 +1,6 @@
 import { memo, useRef, useState } from 'react'
-import { View, TouchableOpacity, FlatList, type FlatListProps } from 'react-native'
+import { View, FlatList, type FlatListProps } from 'react-native'
+import Focusable from '@/tv/Focusable'
 
 import { Icon } from '@/components/common/Icon'
 
@@ -35,9 +36,9 @@ const ListItem = memo(({ id, activeId, onPress }: {
           ? <Icon style={styles.listActiveIcon} name="chevron-right" size={12} color={theme['c-primary-font']} />
           : null
       }
-      <TouchableOpacity style={styles.listName} onPress={handlePress}>
+      <Focusable style={styles.listName} onPress={handlePress}>
         <Text numberOfLines={1} size={16} color={active ? theme['c-primary-font'] : theme['c-font']}>{t(`setting_${id}`)}</Text>
-      </TouchableOpacity>
+      </Focusable>
     </View>
   )
 }, (prevProps, nextProps) => {

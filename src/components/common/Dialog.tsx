@@ -1,7 +1,8 @@
-import { useImperativeHandle, forwardRef, useMemo, useRef } from 'react'
-import { View, TouchableHighlight } from 'react-native'
+import { useImperativeHandle, forwardRef, useMemo, useRef, useState, createContext, useContext } from 'react'
+import { View } from 'react-native'
 
 import Modal, { type ModalType } from './Modal'
+import Focusable from '@/tv/Focusable'
 import { Icon } from '@/components/common/Icon'
 import { useKeyboard } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
@@ -10,6 +11,8 @@ import Text from './Text'
 import { scaleSizeH } from '@/utils/pixelRatio'
 
 const HEADER_HEIGHT = 20
+/** Android TV：弹窗显示中状态（用于弹窗内主按钮自动聚焦，使 D-pad 进入弹窗） */
+export const DialogShownContext = createContext(false)
 const styles = createStyle({
   centeredView: {
     flex: 1,
@@ -82,6 +85,9 @@ export default forwardRef<DialogType, DialogProps>(({
   const theme = useTheme()
   const { keyboardShown, keyboardHeight } = useKeyboard()
   const modalRef = useRef<ModalType>(null)
+  // Android TV：弹窗真正显示后置位，驱动主按钮自动聚焦（hasTVPreferredFocus），
+  // 使 D-pad 焦点进入弹窗（与下拉菜单同一机制）。
+  const [shown, setShown] = useState(false)
 
   useImperativeHandle(ref, () => ({
     setVisible(visible: boolean) {
@@ -89,25 +95,32 @@ export default forwardRef<DialogType, DialogProps>(({
     },
   }))
 
+  const handleHide = () => {
+    setShown(false)
+    onHide?.()
+  }
+
   const closeBtnComponent = useMemo(() => {
     return closeBtn
-      ? <TouchableHighlight style={{ ...styles.closeBtn, width: scaleSizeH(HEADER_HEIGHT) }} underlayColor={theme['c-primary-dark-200-alpha-600']} onPress={() => modalRef.current?.setVisible(false)}>
+      ? <Focusable style={{ ...styles.closeBtn, width: scaleSizeH(HEADER_HEIGHT) }} onPress={() => modalRef.current?.setVisible(false)}>
           <Icon name="close" color={theme['c-primary-dark-500-alpha-500']} size={10} />
-        </TouchableHighlight>
+        </Focusable>
       : null
   }, [closeBtn, theme])
 
   return (
-    <Modal onHide={onHide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(50,50,50,.3)" ref={modalRef}>
-      <View style={{ ...styles.centeredView, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
-        <View style={{ ...styles.modalView, height, backgroundColor: theme['c-content-background'] }} onStartShouldSetResponder={() => true}>
-          <View style={{ ...styles.header, backgroundColor: theme['c-primary-light-100-alpha-100'] }}>
-            <Text style={styles.title} size={13} color={theme['c-primary-light-1000']} numberOfLines={1}>{title}</Text>
-            {closeBtnComponent}
+    <Modal onHide={handleHide} onShow={() => setShown(true)} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(50,50,50,.3)" ref={modalRef}>
+      <DialogShownContext.Provider value={shown}>
+        <View style={{ ...styles.centeredView, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
+          <View style={{ ...styles.modalView, height, backgroundColor: theme['c-content-background'] }} onStartShouldSetResponder={() => true}>
+            <View style={{ ...styles.header, backgroundColor: theme['c-primary-light-100-alpha-100'] }}>
+              <Text style={styles.title} size={13} color={theme['c-primary-light-1000']} numberOfLines={1}>{title}</Text>
+              {closeBtnComponent}
+            </View>
+            {children}
           </View>
-          {children}
         </View>
-      </View>
+      </DialogShownContext.Provider>
     </Modal>
   )
 })

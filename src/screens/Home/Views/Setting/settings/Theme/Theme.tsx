@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { View, TouchableOpacity, type ImageSourcePropType } from 'react-native'
+import { View, type ImageSourcePropType } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { setTheme } from '@/core/theme'
 import { useI18n } from '@/lang'
 import { useSettingValue } from '@/store/setting/hook'
@@ -32,7 +33,7 @@ const ThemeItem = ({ id, name, color, image, setTheme, showAll }: {
 
   return (
     showAll || isActive ? (
-      <TouchableOpacity style={{ ...styles.item, width: scaleSizeH(ITEM_HEIGHT) }} activeOpacity={0.5} onPress={() => { setTheme(id) }}>
+      <Focusable style={{ ...styles.item, width: scaleSizeH(ITEM_HEIGHT) }} activeOpacity={0.5} onPress={() => { setTheme(id) }}>
         <View style={{ ...styles.colorContent, width: scaleSizeH(COLOR_ITEM_HEIGHT), borderColor: isActive ? color : 'transparent' }}>
           {
             image
@@ -43,7 +44,7 @@ const ThemeItem = ({ id, name, color, image, setTheme, showAll }: {
             }
         </View>
         <Text style={styles.name} size={12} color={isActive ? color : theme['c-font']} numberOfLines={1}>{name}</Text>
-      </TouchableOpacity>
+      </Focusable>
     ) : null
   )
 }
@@ -58,10 +59,10 @@ const MoreBtn = ({ showAll, setShowAll }: {
   return (
     showAll ? null
       : (
-          <TouchableOpacity style={styles.moreBtn} activeOpacity={0.5} onPress={() => { setShowAll(!showAll) }}>
+          <Focusable style={styles.moreBtn} activeOpacity={0.5} onPress={() => { setShowAll(!showAll) }}>
             <Text size={14} color={theme['c-primary-font']} numberOfLines={1}>{t('setting_basic_theme_more_btn_show')}</Text>
             <Icon name="chevron-right" size={12} color={theme['c-primary-font']} />
-          </TouchableOpacity>
+          </Focusable>
         )
 
   )

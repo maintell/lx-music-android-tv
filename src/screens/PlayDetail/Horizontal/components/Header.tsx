@@ -1,8 +1,9 @@
 import { memo, useRef } from 'react'
 
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
+import Focusable from '@/tv/Focusable'
 import { pop } from '@/navigation'
 import { useTheme } from '@/store/theme/hook'
 import { usePlayerMusicInfo } from '@/store/player/hook'
@@ -43,9 +44,9 @@ export default memo(() => {
   return (
     <View style={{ height: HEADER_HEIGHT }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
+        <Focusable onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
           <Icon name="chevron-left" size={18} />
-        </TouchableOpacity>
+        </Focusable>
         <Title />
         <DesktopLyricBtn />
         <CommentBtn />

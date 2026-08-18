@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react'
 
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import type { InputProps } from '@/components/common/Input'
 import Input from '@/components/common/Input'
 import { useTheme } from '@/store/theme/hook'
@@ -28,12 +29,12 @@ export default memo(({ value, label, onOnlineMatch, onChanged, style, ...props }
         {
           onChanged ? (
             <View style={styles.btns}>
-              <TouchableOpacity onPress={handleRemove}>
+              <Focusable onPress={handleRemove}>
                 <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_remove_lyric')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={onOnlineMatch}>
+              </Focusable>
+              <Focusable onPress={onOnlineMatch}>
                 <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_match_lyric')}</Text>
-              </TouchableOpacity>
+              </Focusable>
             </View>
           ) : null
         }

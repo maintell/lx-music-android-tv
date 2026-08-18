@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import settingState from '@/store/setting/state'
 import Content from './Content'
 import TagList from './TagList'
@@ -13,6 +13,8 @@ const MAX_WIDTH = scaleSizeW(560)
 export default () => {
   const drawer = useRef<DrawerLayoutFixedType>(null)
   const theme = useTheme()
+  // Android TV：抽屉打开后把焦点请求进标签列表
+  const [drawerOpened, setDrawerOpened] = useState(false)
 
   useEffect(() => {
     const handleFixDrawer = (id: CommonState['navActiveId']) => {
@@ -38,7 +40,7 @@ export default () => {
     }
   }, [])
 
-  const navigationView = () => <TagList />
+  const navigationView = () => <TagList drawerOpened={drawerOpened} />
   // console.log('render drawer content')
 
   return (
@@ -49,6 +51,7 @@ export default () => {
       widthPercentageMax={MAX_WIDTH}
       drawerPosition={settingState.setting['common.drawerLayoutPosition']}
       renderNavigationView={navigationView}
+      onOpenChange={setDrawerOpened}
       drawerBackgroundColor={theme['c-content-background']}
       style={{ elevation: 1 }}
     >

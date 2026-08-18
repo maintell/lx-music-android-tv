@@ -1,6 +1,7 @@
 import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import Text from '@/components/common/Text'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { createStyle, openUrl } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
@@ -111,9 +112,9 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
                 <Text style={styles.tipsText} size={12}>
                   {t('user_api_readme')}
                 </Text>
-                <TouchableOpacity onPress={openFAQPage}>
+                <Focusable onPress={openFAQPage}>
                   <Text style={{ ...styles.tipsText, textDecorationLine: 'underline' }} size={12} color={theme['c-primary-font']}>FAQ</Text>
-                </TouchableOpacity>
+                </Focusable>
                 <View>
                   <Text style={styles.tipsText} size={12}>{t('user_api_note')}</Text>
                 </View>

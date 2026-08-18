@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useNavActiveId, useStatusbarHeight } from '@/store/common/hook'
 import { useTheme } from '@/store/theme/hook'
 import { Icon } from '@/components/common/Icon'
@@ -10,6 +10,7 @@ import type { InitState } from '@/store/common/state'
 import { exitApp, setNavActiveId } from '@/core/common'
 import { BorderWidths } from '@/theme'
 import { useSettingValue } from '@/store/setting/hook'
+import Focusable from '@/tv/Focusable'
 
 const NAV_WIDTH = 68
 
@@ -78,10 +79,11 @@ const Header = () => {
 
 type IdType = InitState['navActiveId'] | 'nav_exit' | 'back_home'
 
-const MenuItem = ({ id, icon, onPress }: {
+const MenuItem = ({ id, icon, onPress, onMenu }: {
   id: IdType
   icon: string
   onPress: (id: IdType) => void
+  onMenu?: () => void
 }) => {
   // const t = useI18n()
   const activeId = useNavActiveId()
@@ -94,12 +96,12 @@ const MenuItem = ({ id, icon, onPress }: {
         </View>
         {/* <Text style={styles.text} size={14} color={theme['c-primary-font']}>{t(id)}</Text> */}
       </View>
-    : <TouchableOpacity style={styles.menuItem} onPress={() => { onPress(id) }}>
+    : <Focusable style={styles.menuItem} onPress={() => { onPress(id) }} onMenu={onMenu}>
         <View style={styles.iconContent}>
           <Icon name={icon} size={20} color={theme['c-font-label']} />
         </View>
         {/* <Text style={styles.text} size={14}>{t(id)}</Text> */}
-      </TouchableOpacity>
+      </Focusable>
 }
 
 export default memo(() => {
@@ -137,10 +139,10 @@ export default memo(() => {
         </View>
       </ScrollView>
       {
-        showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null
+        showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} onMenu={() => handlePress('back_home')} /> : null
       }
       {
-        showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null
+        showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} onMenu={() => handlePress('nav_exit')} /> : null
       }
     </View>
   )

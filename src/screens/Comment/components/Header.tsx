@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 
+import Focusable from '@/tv/Focusable'
 import { Icon } from '@/components/common/Icon'
 import { pop } from '@/navigation'
 // import { AppColors } from '@/theme'
@@ -29,9 +30,9 @@ export default memo(({ musicInfo }: {
     <View style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }}>
       <StatusBar />
       <View style={{ ...styles.container }}>
-        <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
+        <Focusable onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
           <Icon name="chevron-left" size={18} />
-        </TouchableOpacity>
+        </Focusable>
         <Text numberOfLines={1} size={16} style={styles.title}>{t('comment_title', { name: musicInfo.name, singer: musicInfo.singer })}</Text>
         {/* <TouchableOpacity onPress={back} style={{ ...styles.button }}>
           <Icon name="available_updates" style={{ color: theme.normal }} size={24} />

@@ -8,6 +8,8 @@ interface Props extends DrawerLayoutAndroidProps {
   visibleNavNames: COMPONENT_IDS[]
   widthPercentage: number
   widthPercentageMax?: number
+  /** Android TV：抽屉打开/关闭状态变化回调（用于把焦点请求进抽屉内容） */
+  onOpenChange?: (open: boolean) => void
 }
 
 export interface DrawerLayoutFixedType {
@@ -16,11 +18,22 @@ export interface DrawerLayoutFixedType {
   fixWidth: () => void
 }
 
-const DrawerLayoutFixed = forwardRef<DrawerLayoutFixedType, Props>(({ visibleNavNames, widthPercentage, widthPercentageMax, children, ...props }, ref) => {
+const DrawerLayoutFixed = forwardRef<DrawerLayoutFixedType, Props>(({ visibleNavNames, widthPercentage, widthPercentageMax, children, onOpenChange, onDrawerOpen, onDrawerClose, ...props }, ref) => {
   const drawerLayoutRef = useRef<DrawerLayoutAndroid>(null)
   const [w, setW] = useState<number | `${number}%`>('100%')
   const [drawerWidth, setDrawerWidth] = useState(0)
   const changedRef = useRef({ width: 0, changed: false })
+
+  // Android TV：抽屉动画真正打开/关闭后回调（此时抽屉内容才附着并可见，
+  // 调用方可在此时把焦点请求进抽屉内的可选项）。
+  const handleDrawerOpen = useCallback(() => {
+    onOpenChange?.(true)
+    onDrawerOpen?.()
+  }, [onOpenChange, onDrawerOpen])
+  const handleDrawerClose = useCallback(() => {
+    onOpenChange?.(false)
+    onDrawerClose?.()
+  }, [onOpenChange, onDrawerClose])
 
   const fixDrawerWidth = useCallback(() => {
     if (!changedRef.current.width) return
@@ -79,6 +92,8 @@ const DrawerLayoutFixed = forwardRef<DrawerLayoutFixedType, Props>(({ visibleNav
         ref={drawerLayoutRef}
         keyboardDismissMode="on-drag"
         drawerWidth={drawerWidth}
+        onDrawerOpen={handleDrawerOpen}
+        onDrawerClose={handleDrawerClose}
         {...props}
       >
         <View style={{ marginRight: w == '100%' ? 0 : -1, flex: 1 }}>

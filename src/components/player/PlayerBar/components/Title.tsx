@@ -1,4 +1,4 @@
-import { TouchableOpacity } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { navigations } from '@/navigation'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 // import { toast } from '@/utils/tools'
@@ -39,9 +39,9 @@ export default ({ isHome }: { isHome: boolean }) => {
     : ''
   // console.log(playMusicInfo)
   return (
-    <TouchableOpacity style={styles.container} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
+    <Focusable style={styles.container} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
       <Text color={theme['c-font-label']} numberOfLines={1}>{title}</Text>
-    </TouchableOpacity>
+    </Focusable>
   )
 }
 // const Singer = () => {

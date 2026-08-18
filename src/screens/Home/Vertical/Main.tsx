@@ -7,9 +7,10 @@ import Leaderboard from '../Views/Leaderboard'
 import Setting from '../Views/Setting'
 import commonState, { type InitState as CommonState } from '@/store/common/state'
 import { createStyle } from '@/utils/tools'
-import PagerView, { type PageScrollStateChangedNativeEvent, type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import { type PageScrollStateChangedNativeEvent, type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import PagerTV from '@/tv/PagerTV'
 import { setNavActiveId } from '@/core/common'
-import settingState from '@/store/setting/state'
+import { useSettingValue } from '@/store/setting/hook'
 
 const hideKeys = [
   'list.isShowAlbumName',
@@ -194,7 +195,7 @@ const indexMap = [
 ] as const
 
 const Main = () => {
-  const pagerViewRef = useRef<ComponentRef<typeof PagerView>>(null)
+  const pagerViewRef = useRef<ComponentRef<typeof PagerTV>>(null)
   let activeIndexRef = useRef(viewMap[commonState.navActiveId])
   // const isScrollingRef = useRef(false)
   // const scrollPositionRef = useRef(-1)
@@ -248,30 +249,26 @@ const Main = () => {
       const index = viewMap[id]
       if (activeIndexRef.current == index) return
       activeIndexRef.current = index
-      pagerViewRef.current?.setPageWithoutAnimation(index)
-    }
-    const handleConfigUpdate = (keys: Array<keyof LX.AppSetting>, setting: Partial<LX.AppSetting>) => {
-      if (!keys.includes('common.homePageScroll')) return
-      pagerViewRef.current?.setScrollEnabled(setting['common.homePageScroll']!)
+      pagerViewRef.current?.setPage(index)
     }
     // window.requestAnimationFrame(() => pagerViewRef.current && pagerViewRef.current.setPage(activeIndexRef.current))
     global.state_event.on('navActiveIdUpdated', handleUpdate)
-    global.state_event.on('configUpdated', handleConfigUpdate)
     return () => {
       global.state_event.off('navActiveIdUpdated', handleUpdate)
-      global.state_event.off('configUpdated', handleConfigUpdate)
     }
   }, [])
 
 
+  const scrollEnabled = useSettingValue('common.homePageScroll')
+
   const component = useMemo(() => (
-    <PagerView ref={pagerViewRef}
+    <PagerTV ref={pagerViewRef}
       initialPage={activeIndexRef.current}
       // onPageScroll={handlePageScroll}
       offscreenPageLimit={1}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      scrollEnabled={settingState.setting['common.homePageScroll']}
+      scrollEnabled={scrollEnabled}
       style={styles.pagerView}
     >
       <View collapsable={false} key="nav_search" style={styles.pageStyle}>
@@ -304,8 +301,8 @@ const Main = () => {
       <View collapsable={false} key="nav_setting" style={styles.pageStyle}>
         <Setting />
       </View> */}
-    </PagerView>
-  ), [onPageScrollStateChanged, onPageSelected])
+    </PagerTV>
+  ), [onPageScrollStateChanged, onPageSelected, scrollEnabled])
 
   return component
 }

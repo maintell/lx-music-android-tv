@@ -2,7 +2,8 @@ import { useRef, useImperativeHandle, forwardRef, useState, useCallback, memo, u
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import Dialog, { type DialogType } from '@/components/common/Dialog'
-import { FlatList, TouchableOpacity, View, type FlatListProps as _FlatListProps } from 'react-native'
+import { FlatList, View, type FlatListProps as _FlatListProps } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import { type DuplicateMusicItem, filterDuplicateMusic } from './utils'
@@ -54,7 +55,7 @@ const ListItem = memo(({ info, index, onRemove, onPlay, selectedList, onPress }:
       {/* <View style={styles.listItemLabel}>
         <Text style={styles.sn} size={13} color={theme['c-300']}>{info.index + 1}</Text>
       </View> */}
-      <TouchableOpacity style={styles.listItemInfo} onPress={() => { onPress(info) }}>
+      <Focusable style={styles.listItemInfo} onPress={() => { onPress(info) }}>
         <Text color={theme['c-font']} size={14} numberOfLines={1}>{info.musicInfo.name}</Text>
         <View style={styles.listItemAlbum}>
           <Text color={theme['c-font']} size={12} numberOfLines={1}>
@@ -66,7 +67,7 @@ const ListItem = memo(({ info, index, onRemove, onPlay, selectedList, onPress }:
             }
           </Text>
         </View>
-      </TouchableOpacity>
+      </Focusable>
       <View style={styles.listItemLabel}>
         <Text style={styles.listItemLabelText} size={13} color={theme['c-300']}>{ info.musicInfo.source }</Text>
         <Text style={styles.listItemLabelText} size={13} color={theme['c-300']}>{info.musicInfo.interval}</Text>

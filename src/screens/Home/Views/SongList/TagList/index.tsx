@@ -4,7 +4,7 @@ import { type Source } from '@/store/songlist/state'
 import List, { type ListProps, type ListType } from './List'
 
 
-export default () => {
+export default ({ drawerOpened = false }: { drawerOpened?: boolean }) => {
   const [visible, setVisible] = useState(false)
   const listRef = useRef<ListType>(null)
   // const [info, setInfo] = useState({ souce: 'kw', activeId: '' })
@@ -41,7 +41,7 @@ export default () => {
 
   return (
     visible
-      ? <List ref={listRef} onTagChange={handleTagChange} />
+      ? <List ref={listRef} drawerOpened={drawerOpened} onTagChange={handleTagChange} />
       : null
   )
 }

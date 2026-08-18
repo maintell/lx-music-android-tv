@@ -1,11 +1,16 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View, PanResponder } from 'react-native'
+import Focusable, { type TVKeyEvent } from '@/tv/Focusable'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeW, scaleSizeH } from '@/utils/pixelRatio'
 import { useDrag } from '@/utils/hooks'
 import { Icon } from '@/components/common/Icon'
 // import { AppColors } from '@/theme'
+
+const KEYCODE_DPAD_LEFT = 21
+const KEYCODE_DPAD_RIGHT = 22
+const SEEK_STEP_SEC = 5
 
 
 const DefaultBar = memo(() => {
@@ -21,10 +26,11 @@ const BufferedBar = memo(({ progress }: { progress: number }) => {
 })
 
 
-const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
+const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress, onSeekByStep }: {
   onDragState: (drag: boolean) => void
   setDragProgress: (progress: number) => void
   onSetProgress: (progress: number) => void
+  onSeekByStep: (deltaSec: number) => void
 }) => {
   const {
     onLayout,
@@ -58,7 +64,18 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
     }),
   ).current
 
-  return <View onLayout={onLayout} style={styles.pressBar} {...panResponder.panHandlers} />
+  // Android TV：获得焦点时左右方向键按固定步长 seek
+  const handleKeyDown = (e: TVKeyEvent) => {
+    const keyCode = e.nativeEvent?.keyCode
+    if (keyCode == KEYCODE_DPAD_LEFT) onSeekByStep(-SEEK_STEP_SEC)
+    else if (keyCode == KEYCODE_DPAD_RIGHT) onSeekByStep(SEEK_STEP_SEC)
+  }
+
+  return (
+    <Focusable onKeyDown={handleKeyDown} style={styles.pressBar}>
+      <View onLayout={onLayout} style={styles.pressBarFill} {...panResponder.panHandlers} />
+    </Focusable>
+  )
 })
 
 
@@ -91,6 +108,13 @@ const Progress = ({ progress, duration, buffered }: {
     global.app_event.setProgress(progress * durationRef.current)
   }, [])
 
+  const handleSeekByStep = useCallback((deltaSec: number) => {
+    const duration = durationRef.current
+    if (!duration) return
+    const target = Math.min(Math.max(progress + deltaSec / duration, 0), 1)
+    onSetProgress(target)
+  }, [progress, onSetProgress])
+
   return (
     <View style={styles.progress}>
       <View>
@@ -113,7 +137,7 @@ const Progress = ({ progress, duration, buffered }: {
         }
 
       </View>
-      <PreassBar onDragState={setDraging} setDragProgress={setDragProgress} onSetProgress={onSetProgress} />
+      <PreassBar onDragState={setDraging} setDragProgress={setDragProgress} onSetProgress={onSetProgress} onSeekByStep={handleSeekByStep} />
       {/* <View style={{ ...styles.progressBar, height: '100%', width: progressStr }}><Pressable style={styles.progressDot}></Pressable></View> */}
     </View>
   )
@@ -148,6 +172,10 @@ const styles = createStyle({
     paddingBottom: progressContentPadding,
     width: '100%',
     zIndex: 6,
+  },
+  pressBarFill: {
+    width: '100%',
+    height: '100%',
   },
 })
 

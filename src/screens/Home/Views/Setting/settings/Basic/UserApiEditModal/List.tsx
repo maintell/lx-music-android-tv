@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import Text from '@/components/common/Text'
-import { View, TouchableOpacity, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { confirmDialog, createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
@@ -56,9 +57,9 @@ const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
         <CheckBox check={item.allowShowUpdateAlert} label={t('user_api_allow_show_update_alert')} onChange={changeAllowShowUpdateAlert} size={0.86} />
       </View>
       <View style={styles.listItemRight}>
-        <TouchableOpacity style={styles.btn} onPress={handleRemove}>
+        <Focusable style={styles.btn} onPress={handleRemove}>
           <Icon name="close" color={theme['c-button-font']} />
-        </TouchableOpacity>
+        </Focusable>
       </View>
     </View>
   )

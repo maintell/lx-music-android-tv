@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import Image, { getSize } from '@/components/common/Image'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
@@ -50,9 +51,9 @@ export default ({ url, maxWidth }: { url: string, maxWidth: number }) => {
             url={url}
             style={{ height: wh.height, width: wh.width, borderWidth: BorderWidths.normal, borderColor: theme['c-border-background'] }}
           />) : (
-            <TouchableOpacity style={{ ...styles.defaultPic, borderColor: theme['c-border-background'], backgroundColor: theme['c-primary-light-200-alpha-900'] }} onPress={() => { setShow(true) }}>
+            <Focusable style={{ ...styles.defaultPic, borderColor: theme['c-border-background'], backgroundColor: theme['c-primary-light-200-alpha-900'] }} onPress={() => { setShow(true) }}>
               <Text size={13} color={theme['c-primary-font-hover']}>{global.i18n.t('comment_show_image')}</Text>
-            </TouchableOpacity>
+            </Focusable>
           )
         }
       </View>

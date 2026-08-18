@@ -1,5 +1,6 @@
 import { memo, useRef } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 // import Button from '@/components/common/Button'
 import Text from '@/components/common/Text'
 import Badge, { type BadgeType } from '@/components/common/Badge'
@@ -45,7 +46,7 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
 
   const isSelected = selectedList.includes(item)
 
-  const moreButtonRef = useRef<TouchableOpacity>(null)
+  const moreButtonRef = useRef<View>(null)
   const handleShowMenu = () => {
     if (moreButtonRef.current?.measure) {
       moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
@@ -60,7 +61,7 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
 
   return (
     <View style={{ ...styles.listItem, width: rowInfo.rowWidth, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)' }}>
-      <TouchableOpacity style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
+      <Focusable style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
         <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
         <View style={styles.itemInfo}>
           <Text numberOfLines={1}>{item.name}</Text>
@@ -75,10 +76,12 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
             <Text size={12} color={theme['c-250']} numberOfLines={1}>{item.interval}</Text>
           ) : null
         }
-      </TouchableOpacity>
-     <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
-        <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
-      </TouchableOpacity>
+      </Focusable>
+     <View ref={moreButtonRef} collapsable={false} style={styles.moreButton}>
+        <Focusable onPress={handleShowMenu} style={styles.moreButtonFill}>
+          <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
+        </Focusable>
+      </View>
     </View>
   )
 }, (prevProps, nextProps) => {
@@ -165,6 +168,11 @@ const styles = createStyle({
     // paddingTop: 10,
     // paddingBottom: 10,
     // backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+  },
+  moreButtonFill: {
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
   },
 })

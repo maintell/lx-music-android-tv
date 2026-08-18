@@ -1,8 +1,8 @@
-import { TouchableOpacity } from 'react-native'
 import { Icon } from '@/components/common/Icon'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeW } from '@/utils/pixelRatio'
+import Focusable from '@/tv/Focusable'
 
 import { HEADER_HEIGHT } from '@/config/constant'
 export const BTN_WIDTH = scaleSizeW(HEADER_HEIGHT)
@@ -17,9 +17,9 @@ export default ({ icon, size, color, onPress, onLongPress }: {
 }) => {
   const theme = useTheme()
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: BTN_WIDTH, height: BTN_WIDTH }} activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress}>
+    <Focusable style={{ ...styles.cotrolBtn, width: BTN_WIDTH, height: BTN_WIDTH }} activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} onMenu={onLongPress}>
       <Icon name={icon} color={color ?? theme['c-550']} size={size ?? BTN_ICON_SIZE} />
-    </TouchableOpacity>
+    </Focusable>
   )
 }
 

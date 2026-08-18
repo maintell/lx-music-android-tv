@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
 
+import Focusable from '@/tv/Focusable'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
@@ -23,9 +23,9 @@ export default forwardRef<ActiveListNameType, ActiveListNameProps>(({ onShowBoun
   }), [])
 
   return (
-    <TouchableOpacity onPress={onShowBound} style={styles.currentList}>
+    <Focusable onPress={onShowBound} style={styles.currentList}>
       <Text numberOfLines={1} style={styles.currentListText} color={theme['c-button-font']}>{currentListName}</Text>
-    </TouchableOpacity>
+    </Focusable>
   )
 })
 

@@ -1,6 +1,6 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useContext, useImperativeHandle, useRef } from 'react'
 import { View, ScrollView } from 'react-native'
-import Dialog, { type DialogType } from './Dialog'
+import Dialog, { DialogShownContext, type DialogType } from './Dialog'
 import Button from './Button'
 import { createStyle } from '@/utils/tools'
 import { useI18n } from '@/lang/index'
@@ -90,6 +90,9 @@ export default forwardRef<ConfirmAlertType, ConfirmAlertProps>(({
 }: ConfirmAlertProps, ref) => {
   const theme = useTheme()
   const t = useI18n()
+  // Android TV：弹窗显示后把 D-pad 焦点送到主按钮（确认；无确认则取消），
+  // 否则焦点停在主窗口、键盘无法操作弹窗。
+  const dialogShown = useContext(DialogShownContext)
 
   const dialogRef = useRef<DialogType>(null)
 
@@ -112,11 +115,20 @@ export default forwardRef<ConfirmAlertType, ConfirmAlertProps>(({
         </ScrollView>
       </View>
       <View style={{ ...styles.btns, ...(reverseBtn ? styles.btnsReversedDirection : styles.btnsDirection) }}>
-        <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
+        <Button
+          style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }}
+          hasTVPreferredFocus={dialogShown && !showConfirm}
+          onPress={handleCancel}
+        >
           <Text color={theme['c-button-font']}>{cancelText || t('cancel')}</Text>
         </Button>
         {showConfirm
-          ? <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }} onPress={onConfirm} disabled={disabledConfirm}>
+          ? <Button
+              style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }}
+              hasTVPreferredFocus={dialogShown}
+              onPress={onConfirm}
+              disabled={disabledConfirm}
+            >
               <Text color={theme['c-button-font']}>{confirmText || t('confirm')}</Text>
             </Button>
           : null}

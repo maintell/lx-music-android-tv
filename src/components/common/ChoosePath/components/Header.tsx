@@ -1,7 +1,8 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
+import Focusable from '@/tv/Focusable'
 import { createStyle } from '@/utils/tools'
 import { getExternalStoragePaths, stat } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
@@ -70,15 +71,15 @@ export default memo(({
           <Text style={styles.subTitle} color={theme['c-primary-font']} size={13} numberOfLines={1}>{path}</Text>
         </View>
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionBtn} onPress={openStorage}>
+          <Focusable style={styles.actionBtn} onPress={openStorage}>
             <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} onPress={handleShowNewFolderModal}>
+          </Focusable>
+          <Focusable style={styles.actionBtn} onPress={handleShowNewFolderModal}>
             <Icon name="add_folder" color={theme['c-primary-font']} size={22} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} onPress={refresh}>
+          </Focusable>
+          <Focusable style={styles.actionBtn} onPress={refresh}>
             <Icon name="available_updates" color={theme['c-primary-font']} size={22} />
-          </TouchableOpacity>
+          </Focusable>
         </View>
       </View>
       <OpenStorageModal ref={openDirModalTypeRef} onOpenDir={onOpenDir} />

@@ -1,5 +1,6 @@
 import { memo } from 'react'
-import { View, Platform, TouchableOpacity } from 'react-native'
+import { View, Platform } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { createStyle } from '@/utils/tools'
 import { type ListInfoItem } from '@/store/songlist/state'
 import Text from '@/components/common/Text'
@@ -26,14 +27,14 @@ export default memo(({ item, index, width, showSource, onPress }: {
       ? (
           <View style={{ ...styles.listItem, width: itemWidth }}>
             <View style={{ ...styles.listItemImg, backgroundColor: theme['c-content-background'] }}>
-              <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
+              <Focusable activeOpacity={0.5} onPress={handlePress}>
                 <Image url={item.img} nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${item.id}`} style={{ width: itemWidth, height: itemWidth, borderRadius: 4 }} />
                 { showSource ? <Text style={styles.sourceLabel} size={9} color="#fff" >{item.source}</Text> : null }
-              </TouchableOpacity>
+              </Focusable>
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
+            <Focusable activeOpacity={0.5} onPress={handlePress}>
               <Text style={styles.listItemTitle} numberOfLines={ 2 }>{item.name}</Text>
-            </TouchableOpacity>
+            </Focusable>
             {/* <Text>{JSON.stringify(item)}</Text> */}
           </View>
         )

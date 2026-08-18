@@ -3,6 +3,7 @@ import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/Confirm
 import Text from '@/components/common/Text'
 import { View } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
+import { IS_TV } from '@/tv/constants'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
@@ -65,9 +66,14 @@ export default forwardRef<ModalType, ModalProps>(({ onOpenId }, ref) => {
     requestAnimationFrame(() => {
       inputRef.current?.setText('')
       // sourceSelectorRef.current?.setSource(source)
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 300)
+      // Android TV：弹窗打开后焦点由确认按钮的 hasTVPreferredFocus 承接，
+      // 不能自动聚焦输入框——否则 D-pad 焦点被 EditText/IME 占用，方向键
+      // 无法移动到取消/确认按钮。需输入时方向键定位到输入框再按 OK 即可。
+      if (!IS_TV) {
+        setTimeout(() => {
+          inputRef.current?.focus()
+        }, 300)
+      }
     })
   }
   useImperativeHandle(ref, () => ({

@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { type InitState } from '@/store/hotSearch/state'
 import Button from '@/components/common/Button'
 import Text from '@/components/common/Text'
@@ -80,9 +81,9 @@ export default forwardRef<HistorySearchType, HistorySearchProps>((props, ref) =>
           <View>
             <View style={styles.titleContent}>
               <Text size={16}>{t('search_history_search')}</Text>
-              <TouchableOpacity onPress={handleClear} style={styles.titleBtn}>
+              <Focusable onPress={handleClear} style={styles.titleBtn}>
                 <Icon name="eraser" color={theme['c-300']} size={14} />
-              </TouchableOpacity>
+              </Focusable>
             </View>
             <View style={styles.list}>
               {

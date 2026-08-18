@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react'
-import { Animated, View, TouchableOpacity } from 'react-native'
+import { Animated, View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 
 import Text from '@/components/common/Text'
 import Input, { type InputType } from '@/components/common/Input'
@@ -130,9 +131,9 @@ export default forwardRef<ListSearchBarType, ListSearchBarProps>(({ onSearch, on
         <View style={styles.content}>
           <SearchInput ref={searchInputRef} onSearch={onSearch} />
         </View>
-        <TouchableOpacity onPress={onExitSearch} style={styles.btn}>
+        <Focusable onPress={onExitSearch} style={styles.btn}>
           <Text color={theme['c-button-font']}>{t('list_select_cancel')}</Text>
-        </TouchableOpacity>
+        </Focusable>
       </Animated.View>
     )
   }, [animaStyle, onSearch, onExitSearch, theme, t])

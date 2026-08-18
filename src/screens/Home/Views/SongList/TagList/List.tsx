@@ -11,13 +11,15 @@ import Text from '@/components/common/Text'
 
 export interface ListProps {
   onTagChange: TagGroupProps['onTagChange']
+  /** Android TV：抽屉打开中，首项自动聚焦 */
+  drawerOpened?: boolean
 }
 
 export interface ListType {
   loadTag: (source: Source, activeId: string) => void
 }
 
-export default forwardRef<ListType, ListProps>(({ onTagChange }, ref) => {
+export default forwardRef<ListType, ListProps>(({ onTagChange, drawerOpened = false }, ref) => {
   // const theme = useTheme()
   const [activeId, setActiveId] = useState('')
   const [list, setList] = useState<TagInfo['tags']>([])
@@ -61,6 +63,7 @@ export default forwardRef<ListType, ListProps>(({ onTagChange }, ref) => {
               name={type.name}
               list={type.list}
               activeId={activeId}
+              drawerOpened={drawerOpened && index == 0}
               onTagChange={onTagChange}
             />
           ))

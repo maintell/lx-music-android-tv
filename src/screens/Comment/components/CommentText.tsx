@@ -1,5 +1,6 @@
 import { memo, useMemo, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
@@ -39,9 +40,9 @@ export default memo(({ text }: { text: string }) => {
           show ? <Text selectable style={styles.text}>{text}</Text>
             : <Text selectable style={styles.text}>{text.substring(0, length)} <Text color={theme['c-font-label']}>……</Text></Text>
         }
-        <TouchableOpacity style={styles.toggle} onPress={() => { setShow(!show) }}>
+        <Focusable style={styles.toggle} onPress={() => { setShow(!show) }}>
           <Text color={theme['c-primary-font']}>{show ? global.i18n.t('comment_hide_text') : global.i18n.t('comment_show_text')}</Text>
-        </TouchableOpacity>
+        </Focusable>
 
       </View>
     ) : <Text selectable style={styles.text}>{text}</Text>

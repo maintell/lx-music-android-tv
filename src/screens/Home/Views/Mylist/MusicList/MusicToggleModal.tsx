@@ -2,7 +2,8 @@ import { useRef, useImperativeHandle, forwardRef, useState, useCallback, memo, u
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import Dialog, { type DialogType } from '@/components/common/Dialog'
-import { FlatList, ScrollView, TouchableOpacity, View, type FlatListProps as _FlatListProps } from 'react-native'
+import { FlatList, ScrollView, View, type FlatListProps as _FlatListProps } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import { Icon } from '@/components/common/Icon'
@@ -36,7 +37,7 @@ const Tabs = <T extends LX.OnlineSource>({ list, source, onChangeSource }: {
     <ScrollView ref={scrollViewRef} style={styles.tabContainer} keyboardShouldPersistTaps={'always'} horizontal>
       {
         list_t.map(s => (
-          <TouchableOpacity
+          <Focusable
             style={{ ...styles.tabButton, borderBottomColor: source == s.action ? theme['c-primary-background-active'] : 'transparent' }}
             onPress={() => {
               onChangeSource(s.action as T)
@@ -44,7 +45,7 @@ const Tabs = <T extends LX.OnlineSource>({ list, source, onChangeSource }: {
             key={s.action}
           >
             <Text style={styles.tabButtonText} color={source == s.action ? theme['c-primary-font-active'] : theme['c-font']}>{s.label}</Text>
-          </TouchableOpacity>
+          </Focusable>
         ))
       }
     </ScrollView>

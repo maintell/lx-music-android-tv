@@ -1,5 +1,6 @@
 import { memo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 
 import Section from '../components/Section'
 // import Button from './components/Button'
@@ -64,28 +65,28 @@ export default memo(() => {
     <Section title={t('setting_about')}>
       <View style={styles.part}>
         <Text style={styles.text} >本软件完全免费，代码已开源。开源地址：</Text>
-        <TouchableOpacity onPress={openHomePage}>
+        <Focusable onPress={openHomePage}>
           <Text style={textLinkStyle}>https://github.com/lyswhut/lx-music-mobile</Text>
-        </TouchableOpacity>
+        </Focusable>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>最新版下载地址：</Text>
-        <TouchableOpacity onPress={openGHReleasePage}>
+        <Focusable onPress={openGHReleasePage}>
           <Text style={textLinkStyle}>GitHub Releases</Text>
-        </TouchableOpacity>
+        </Focusable>
       </View>
       <View style={styles.part}>
         <Text style={styles.text} >软件的常见问题可转至：</Text>
-        <TouchableOpacity onPress={openFAQPage}>
+        <Focusable onPress={openFAQPage}>
           <Text style={textLinkStyle}>移动版常见问题</Text>
-        </TouchableOpacity>
+        </Focusable>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}><Text style={styles.boldText}>本软件没有客服</Text>，但我们整理了一些常见的使用问题。<Text style={styles.boldText} >仔细、仔细、仔细</Text>地阅读常见问题后，</Text>
         <Text style={styles.text}>仍有问题可到 GitHub </Text>
-        <TouchableOpacity onPress={openIssuePage}>
+        <Focusable onPress={openIssuePage}>
           <Text style={textLinkStyle}>提交 Issue</Text>
-        </TouchableOpacity>
+        </Focusable>
         <Text style={styles.text}>。</Text>
       </View>
       <View style={styles.part}>
@@ -105,9 +106,9 @@ export default memo(() => {
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>你已签署本软件的</Text>
-        <TouchableOpacity onPress={openPactModal}><Text style={styles.text} color={theme['c-primary-font']}>许可协议</Text></TouchableOpacity>
+        <Focusable onPress={openPactModal}><Text style={styles.text} color={theme['c-primary-font']}>许可协议</Text></Focusable>
         <Text style={styles.text}>，协议的在线版本在</Text>
-        <TouchableOpacity onPress={openPartPage}><Text style={textLinkStyle}>这里</Text></TouchableOpacity>
+        <Focusable onPress={openPartPage}><Text style={textLinkStyle}>这里</Text></Focusable>
         <Text style={styles.text}>。</Text>
       </View>
       <View style={styles.part}>

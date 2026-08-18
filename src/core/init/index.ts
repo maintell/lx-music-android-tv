@@ -55,6 +55,11 @@ export default async() => {
   bootLog('Playback Service Registered.')
   await initPlayer(setting)
   bootLog('Player inited.')
+
+  // Android TV：挂载遥控器媒体键监听（手机端为 no-op）
+  const initTVRemote = (await import('@/tv/remoteKey')).default
+  initTVRemote()
+  bootLog('TV remote media key listener inited.')
   await dataInit(setting)
   bootLog('Data inited.')
   await initCommonState(setting)

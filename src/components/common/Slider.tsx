@@ -3,6 +3,7 @@ import { memo } from 'react'
 import Slider, { type SliderProps as _SliderProps } from '@react-native-community/slider'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
+import Focusable from '@/tv/Focusable'
 
 export type SliderProps = Pick<_SliderProps,
 'value'
@@ -22,20 +23,24 @@ export default memo(({ value, minimumValue, maximumValue, onSlidingStart, onSlid
     if (onValueChange && minimumValue != null) onValueChange(Math.max(value, minimumValue))
   }
 
+  // ponytail: Focusable 提供 TV 焦点框；方向键调节值需真机验证（@react-native-community/slider 的
+  // 原生 SeekBar 在 TV 上未接 D-pad 事件，若需方向键调节需在 onKeyDown 中按 step 调整并调用 onValueChange）
   return (
-    <Slider
-      value={value}
-      style={styles.slider}
-      minimumValue={minimumValue}
-      maximumValue={maximumValue}
-      minimumTrackTintColor={theme['c-primary-alpha-500']}
-      maximumTrackTintColor={theme['c-primary-alpha-500']}
-      thumbTintColor={theme['c-primary']}
-      onSlidingStart={onSlidingStart}
-      onSlidingComplete={onSlidingComplete}
-      onValueChange={handleValueChange}
-      step={step}
-    />
+    <Focusable style={styles.slider}>
+      <Slider
+        value={value}
+        style={styles.slider}
+        minimumValue={minimumValue}
+        maximumValue={maximumValue}
+        minimumTrackTintColor={theme['c-primary-alpha-500']}
+        maximumTrackTintColor={theme['c-primary-alpha-500']}
+        thumbTintColor={theme['c-primary']}
+        onSlidingStart={onSlidingStart}
+        onSlidingComplete={onSlidingComplete}
+        onValueChange={handleValueChange}
+        step={step}
+      />
+    </Focusable>
   )
 })
 

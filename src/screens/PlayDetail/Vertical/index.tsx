@@ -5,7 +5,8 @@ import Header from './components/Header'
 // import Aside from './components/Aside'
 // import Main from './components/Main'
 import Player from './Player'
-import PagerView, { type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import { type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import PagerTV from '@/tv/PagerTV'
 import Pic from './Pic'
 import Lyric from './Lyric'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/nativeModules/utils'
@@ -74,7 +75,7 @@ export default memo(({ componentId }: { componentId: string }) => {
     <>
       <Header />
       <View style={styles.container}>
-        <PagerView
+        <PagerTV
           onPageSelected={onPageSelected}
           // onPageScrollStateChanged={onPageScrollStateChanged}
           style={styles.pagerView}
@@ -85,7 +86,7 @@ export default memo(({ componentId }: { componentId: string }) => {
           <View collapsable={false}>
             <LyricPage activeIndex={pageIndex} />
           </View>
-        </PagerView>
+        </PagerTV>
         {/* <View style={styles.pageIndicator} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pageIndicator}>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 0 ? theme['c-primary-light-100-alpha-700'] : theme['c-primary-alpha-900'] }}></View>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 1 ? theme['c-primary-light-100-alpha-700'] : theme['c-primary-alpha-900'] }}></View>

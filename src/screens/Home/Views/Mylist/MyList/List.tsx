@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef } from 'react'
-import { View, TouchableOpacity, FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import { View, FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import Focusable from '@/tv/Focusable'
 
 import { Icon } from '@/components/common/Icon'
 
@@ -26,7 +27,7 @@ const ListItem = memo(({ item, index, activeId, onPress, onShowMenu }: {
   onShowMenu: (item: LX.List.MyListInfo, index: number, position: { x: number, y: number, w: number, h: number }) => void
 }) => {
   const theme = useTheme()
-  const moreButtonRef = useRef<TouchableOpacity>(null)
+  const moreButtonRef = useRef<View>(null)
   const fetching = useListFetching(item.id)
 
   const active = activeId == item.id
@@ -52,12 +53,14 @@ const ListItem = memo(({ item, index, activeId, onPress, onShowMenu }: {
           : null
       }
       { fetching ? <Loading color={active ? theme['c-primary-font'] : theme['c-font']} style={styles.loading} /> : null }
-      <TouchableOpacity style={styles.listName} onPress={handlePress}>
+      <Focusable style={styles.listName} onPress={handlePress}>
         <Text numberOfLines={1} color={active ? theme['c-primary-font'] : theme['c-font']}>{item.name}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.listMoreBtn}>
-        <Icon name="dots-vertical" color={theme['c-350']} size={12} />
-      </TouchableOpacity>
+      </Focusable>
+      <View ref={moreButtonRef} collapsable={false} style={styles.listMoreBtn}>
+        <Focusable onPress={handleShowMenu} style={styles.listMoreBtnFill}>
+          <Icon name="dots-vertical" color={theme['c-350']} size={12} />
+        </Focusable>
+      </View>
     </View>
   )
 }, (prevProps, nextProps) => {
@@ -185,6 +188,11 @@ const styles = createStyle({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  listMoreBtnFill: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 

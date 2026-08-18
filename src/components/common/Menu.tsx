@@ -1,8 +1,9 @@
 import { useImperativeHandle, forwardRef, useMemo, useRef, useState, type Ref } from 'react'
-import { View, Animated, TouchableHighlight } from 'react-native'
+import { View, Animated } from 'react-native'
 import { useWindowSize } from '@/utils/hooks'
 
 import Modal, { type ModalType } from './Modal'
+import Focusable from '@/tv/Focusable'
 
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
@@ -60,6 +61,7 @@ interface Props<M extends Menus = Menus> {
   fontSize?: number
   center?: boolean
   activeId?: M[number]['action'] | null
+  visible?: boolean
 }
 
 const Menu = ({
@@ -73,6 +75,7 @@ const Menu = ({
   activeId,
   fontSize = 15,
   center = false,
+  visible = false,
 }: Props) => {
   const theme = useTheme()
   const windowSize = useWindowSize()
@@ -122,6 +125,13 @@ const Menu = ({
     onHide()
   }
 
+  // Android TV：Modal 弹出后焦点默认停在主窗口，菜单项拿不到焦点。
+  // 给第一个可选项标记 hasTVPreferredFocus，弹窗出现时原生层自动 requestFocus，
+  // 之后 D-pad 即可在菜单内上下导航选择平台。
+  const firstSelectableIndex = useMemo(() =>
+    menus.findIndex(m => !m.disabled && m.action != activeId),
+  [menus, activeId])
+
   // console.log('render menu')
   // console.log(activeId)
   // console.log(menuStyle)
@@ -150,14 +160,14 @@ const Menu = ({
                     </View>
                   )
                 : (
-                    <TouchableHighlight
+                    <Focusable
                       key={menu.action}
                       style={{ ...styles.menuItem, width: menuItemStyle.width, height: menuItemStyle.height }}
-                      underlayColor={theme['c-primary-background-active']}
+                      hasTVPreferredFocus={visible && index == firstSelectableIndex}
                       onPress={() => { menuPress(menu) }}
                     >
                       <Text style={{ textAlign: center ? 'center' : 'left' }} size={fontSize} numberOfLines={1}>{menu.label}</Text>
-                    </TouchableHighlight>
+                    </Focusable>
                   )
 
           ))
@@ -188,13 +198,18 @@ const Component = <M extends Menus>({ menus, width, height, activeId, onHide, on
   const modalRef = useRef<ModalType>(null)
   const [position, setPosition] = useState<Position>({ w: 0, h: 0, x: 0, y: 0 })
   const [menuSize, setMenuSize] = useState<MenuSize>({ })
+  // Android TV：菜单弹窗首项自动聚焦需要知道可见状态
+  const [visible, setVisible] = useState(false)
   const hide = () => {
+    setVisible(false)
     modalRef.current?.setVisible(false)
   }
   useImperativeHandle(ref, () => ({
     show(newPosition, menuSize) {
       setPosition(newPosition)
       if (menuSize) setMenuSize(menuSize)
+      // 不要在这里置 visible=true：hasTVPreferredFocus 需在 Modal 真正显示（onShow）之后
+      // 才随重渲染生效，否则 requestFocus 在 dialog 附着前调用会落空。
       modalRef.current?.setVisible(true)
     },
     hide() {
@@ -203,8 +218,8 @@ const Component = <M extends Menus>({ menus, width, height, activeId, onHide, on
   }))
 
   return (
-    <Modal onHide={onHide} ref={modalRef}>
-      <Menu menus={menus} width={width} height={height} activeId={activeId} buttonPosition={position} menuSize={menuSize} onPress={onPress} onHide={hide} fontSize={fontSize} center={center} />
+    <Modal onHide={onHide} onShow={() => setVisible(true)} ref={modalRef}>
+      <Menu menus={menus} width={width} height={height} activeId={activeId} buttonPosition={position} menuSize={menuSize} visible={visible} onPress={onPress} onHide={hide} fontSize={fontSize} center={center} />
     </Modal>
   )
 }

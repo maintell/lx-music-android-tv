@@ -2,7 +2,9 @@ import { updateSetting } from '@/core/common'
 import { setDesktopLyricColor } from '@/core/desktopLyric'
 import { useI18n } from '@/lang'
 import { memo } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+
+import Focusable from '@/tv/Focusable'
 
 import SubTitle from '../../components/SubTitle'
 
@@ -24,11 +26,11 @@ const ThemeItem = ({ color, change }: {
   change: (color: Theme) => void
 }) => {
   return (
-    <TouchableOpacity style={styles.item} activeOpacity={0.5} onPress={() => { change(color) }}>
+    <Focusable style={styles.item} activeOpacity={0.5} onPress={() => { change(color) }}>
       <View style={styles.colorContent}>
         <View style={{ ...styles.image, backgroundColor: color[0] }}></View>
       </View>
-    </TouchableOpacity>
+    </Focusable>
   )
 }
 

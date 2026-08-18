@@ -11,10 +11,14 @@ export interface TagGroupProps {
   list: TagInfoItem[]
   onTagChange: (name: string, id: string) => void
   activeId: string
+  /** Android TV：该组为第一组且抽屉打开中时，第一个可选项自动聚焦 */
+  drawerOpened?: boolean
 }
 
-export default ({ name, list, onTagChange, activeId }: TagGroupProps) => {
+export default ({ name, list, onTagChange, activeId, drawerOpened = false }: TagGroupProps) => {
   const theme = useTheme()
+  // Android TV：首项自动聚焦（hasTVPreferredFocus 在抽屉真正打开后置 true 才生效）
+  let firstSelectableShown = false
   return (
     <View>
       {
@@ -23,24 +27,32 @@ export default ({ name, list, onTagChange, activeId }: TagGroupProps) => {
           : null
       }
       <View style={styles.tagTypeList}>
-        {list.map(item => (
-          activeId == item.id
-            ? (
-                <View style={{ ...styles.tagButton, backgroundColor: theme['c-button-background'] }} key={item.id}>
-                  <Text style={styles.tagButtonText} color={theme['c-primary-font-active']}>{item.name}</Text>
-                </View>
-              )
-            : (
-                <Button
-                  style={{ ...styles.tagButton, backgroundColor: theme['c-button-background'] }}
-                  key={item.id}
-                  onPress={() => { onTagChange(item.name, item.id) }}
-                >
-                  <Text style={styles.tagButtonText} color={theme['c-font']} >{item.name}</Text>
-                </Button>
-              )
-
-        ))}
+        {list.map(item => {
+          const isActive = activeId == item.id
+          let preferredFocus = false
+          if (!isActive && !firstSelectableShown) {
+            firstSelectableShown = true
+            preferredFocus = drawerOpened
+          }
+          return (
+            isActive
+              ? (
+                  <View style={{ ...styles.tagButton, backgroundColor: theme['c-button-background'] }} key={item.id}>
+                    <Text style={styles.tagButtonText} color={theme['c-primary-font-active']}>{item.name}</Text>
+                  </View>
+                )
+              : (
+                  <Button
+                    style={{ ...styles.tagButton, backgroundColor: theme['c-button-background'] }}
+                    key={item.id}
+                    hasTVPreferredFocus={preferredFocus}
+                    onPress={() => { onTagChange(item.name, item.id) }}
+                  >
+                    <Text style={styles.tagButtonText} color={theme['c-font']} >{item.name}</Text>
+                  </Button>
+                )
+          )
+        })}
       </View>
     </View>
   )

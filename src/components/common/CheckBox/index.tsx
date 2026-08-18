@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import CheckBox from './Checkbox'
 
 import { createStyle, tipDialog } from '@/utils/tools'
@@ -7,6 +7,7 @@ import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import Text from '../Text'
 import { Icon } from '../Icon'
+import Focusable from '@/tv/Focusable'
 
 export interface CheckBoxProps {
   check: boolean
@@ -61,9 +62,9 @@ export default ({ check, label, children, onChange, helpTitle, helpDesc, disable
       })
     }
     return (helpTitle ?? helpDesc) ? (
-      <TouchableOpacity style={styles.helpBtn} onPress={handleShowHelp}>
+      <Focusable style={styles.helpBtn} onPress={handleShowHelp}>
         <Icon size={15 * size} name="help" />
-      </TouchableOpacity>
+      </Focusable>
     ) : null
   }, [helpTitle, helpDesc, size])
 
@@ -83,9 +84,9 @@ export default ({ check, label, children, onChange, helpTitle, helpDesc, disable
       : (
           <View style={contentStyle}>
             <CheckBox status={check ? 'checked' : 'unchecked'} disabled={isDisabled} onPress={handleLabelPress} tintColors={tintColors} size={size} />
-            <TouchableOpacity style={labelStyle} activeOpacity={0.3} onPress={handleLabelPress}>
+            <Focusable style={labelStyle} activeOpacity={0.3} onPress={handleLabelPress}>
               {label ? <Text style={styles.name} size={15 * size}>{label}</Text> : children}
-            </TouchableOpacity>
+            </Focusable>
             {helpComponent}
           </View>
         )

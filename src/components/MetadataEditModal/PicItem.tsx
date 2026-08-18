@@ -1,6 +1,7 @@
 import { memo, useCallback, useRef } from 'react'
 
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
+import Focusable from '@/tv/Focusable'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
@@ -36,15 +37,15 @@ export default memo(({ value, label, onOnlineMatch, onChanged }: PicItemProps) =
       <View style={styles.header}>
         <Text style={styles.label} size={14}>{label}</Text>
         <View style={styles.btns}>
-          <TouchableOpacity onPress={handleRemoveFile}>
+          <Focusable onPress={handleRemoveFile}>
             <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_remove_pic')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onOnlineMatch}>
+          </Focusable>
+          <Focusable onPress={onOnlineMatch}>
             <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_match_pic')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleShowSelectFile}>
+          </Focusable>
+          <Focusable onPress={handleShowSelectFile}>
             <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_select_pic')}</Text>
-          </TouchableOpacity>
+          </Focusable>
         </View>
       </View>
       <View style={styles.picContent}>

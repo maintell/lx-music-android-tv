@@ -1,6 +1,8 @@
 import { memo, useMemo, useEffect, useRef, useState, useCallback } from 'react'
-import { View, TouchableOpacity } from 'react-native'
-import PagerView, { type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import { View } from 'react-native'
+import { type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import PagerTV, { type PagerTVHandle } from '@/tv/PagerTV'
+import Focusable from '@/tv/Focusable'
 import Header from './components/Header'
 import { Icon } from '@/components/common/Icon'
 import CommentHot from './CommentHot'
@@ -29,9 +31,9 @@ const HeaderItem = ({ id, label, isActive, onPress }: {
   const theme = useTheme()
   // console.log(theme)
   const components = useMemo(() => (
-    <TouchableOpacity style={styles.tabBtn} onPress={() => { !isActive && onPress(id) }}>
+    <Focusable style={styles.tabBtn} onPress={() => { !isActive && onPress(id) }}>
       <Text color={isActive ? theme['c-primary-font-active'] : theme['c-font']}>{label}</Text>
-    </TouchableOpacity>
+    </Focusable>
   ), [isActive, theme, label, onPress, id])
 
   return components
@@ -80,7 +82,7 @@ const getMusicInfo = (musicInfo: LX.Player.PlayMusic | null) => {
 export default memo(({ componentId }: {
   componentId: string
 }) => {
-  const pagerViewRef = useRef<PagerView>(null)
+  const pagerViewRef = useRef<PagerTVHandle>(null)
   const [activeId, setActiveId] = useState<ActiveId>('hot')
   const [musicInfo, setMusicInfo] = useState<LX.Music.MusicInfo | null>(getMusicInfo(playerState.playMusicInfo.musicInfo))
   const t = useI18n()
@@ -135,12 +137,12 @@ export default memo(({ componentId }: {
             {tabs.map(({ id, label }) => <HeaderItem id={id} label={label} key={id} isActive={activeId == id} onPress={toggleTab} />)}
           </View>
           <View>
-            <TouchableOpacity onPress={refreshComment} style={{ ...styles.btn, width: BAR_HEIGHT }}>
+            <Focusable onPress={refreshComment} style={{ ...styles.btn, width: BAR_HEIGHT }}>
               <Icon name="available_updates" size={20} color={theme['c-600']} />
-            </TouchableOpacity>
+            </Focusable>
           </View>
         </View>
-        <PagerView
+        <PagerTV
           ref={pagerViewRef}
           onPageSelected={onPageSelected}
           // onPageScrollStateChanged={onPageScrollStateChanged}
@@ -152,7 +154,7 @@ export default memo(({ componentId }: {
           <View collapsable={false} style={styles.pageStyle}>
             <NewCommentPage activeId={activeId} musicInfo={musicInfo as LX.Music.MusicInfoOnline} onUpdateTotal={setNewTotal} />
           </View>
-        </PagerView>
+        </PagerTV>
       </View>
     )
   }, [activeId, musicInfo, onPageSelected, refreshComment, setHotTotal, setNewTotal, tabs, theme, toggleTab])
