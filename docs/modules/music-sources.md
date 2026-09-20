@@ -356,6 +356,6 @@ global.state_event.apiSourceUpdated(setting['common.apiSource'])
 ## 11. 需人工核对的疑点
 
 - `api-source-info.ts` 为空数组 + `apiList` 全注释 → 内置源 `getMusicUrl` 全部抛 `Api is not found`，播放地址仅靠 user_api；若属预期（design-doc §8 风险 6），建议明确后续是否重新启用 api 表或填充 supportQualitys。
-- `meta.toggleMusicInfo` 字段无写入点（仅 `core/player/player.ts` 读取），移动端"源切换"实际走 `handleToggleSource` 列表替换——该字段是桌面版遗留还是有意保留，需确认。
+- `meta.toggleMusicInfo` 字段**移动端无写入点（已核对源码）**：全仓仅 `core/player/player.ts:63/102-105` 读取它用于向"另一音源"换取播放地址，无任何代码写入该字段。`musicSdk/xm.js` 之外，移动端的"切换源"交互实际走 `screens/Home/Views/Mylist/MusicList/listAction.ts` 的 `handleToggleSource`（传入候选 `toggleMusicInfo` → 作为**新列表条目** `addListMusics` 后播放，而非回写 `musicInfo.meta.toggleMusicInfo`）。结论：该字段是桌面版遗留的"同曲多源候选"数据——移动端不生产它，但 `player.ts` 在读取到（如桌面同步而来）时会照常优先用它取地址。
 - `xm.js` 为 stub 且不在 `sources.sources`，但 `index.js` 仍导出它（design-doc §8 风险 5）：可考虑直接删除以减少困惑。
 - user_api 的 `supportActions` 白名单中 `kw/kg/tx/wy/mg` 仅允许 `musicUrl`（`local` 才允许 `lyric/pic`）——脚本声明 `lyric`/`pic` 会被过滤，这是有意的能力裁剪还是待扩展项，需确认。

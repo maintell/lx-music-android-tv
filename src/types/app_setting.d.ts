@@ -37,6 +37,11 @@ declare global {
       'common.isAgreePact': boolean
 
       /**
+       * 默认在线源（自定义音源）是否已导入过（仅首次启动自动导入一次）
+       */
+      'common.isUserApiDefaultsImported': boolean
+
+      /**
        * 是否在键盘弹出时隐藏播放栏
        */
       'common.autoHidePlayBar': boolean

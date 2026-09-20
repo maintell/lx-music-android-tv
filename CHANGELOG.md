@@ -6,6 +6,18 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [2.1.0](https://github.com/maintell/lx-music-android-tv/compare/v2.0.0...v2.1.0) - 2026-09-19
+
+新增内置默认在线源能力（社区维护的自定义音源），并配套开发者文档修订。
+
+### 新增
+- 默认在线源：首次启动时自动导入 10 个社区维护的自定义音源（pdone/lx-music-source，经 ghproxy.net 代理），并在「自定义源」弹窗提供「导入默认源」按钮以便误删后重新导入
+- 默认源导入通过 `common.isUserApiDefaultsImported` 一次性标记控制，仅在用户无任何自定义源时触发，且导入后不自动激活，由用户在「设置 → 音源」中手动选择
+- 内置默认源列表集中于 `src/config/defaultUserApiSources.ts`，便于维护与增删
+
+### 其他
+- 开发者文档（docs/）核对并更新两处源码疑点：下载列表播放路径与 `meta.toggleMusicInfo` 字段的实情
+
 ## [2.0.0](https://github.com/maintell/lx-music-android-tv/compare/v1.8.4...v2.0.0) - 2026-08-18
 
 适配 Android TV 的洛雪音乐（LX Music）移动版 fork：聚焦遥控器操作与 TV 布局优化。

@@ -1,5 +1,6 @@
 import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams, type RequestParams } from '@/utils/nativeModules/userApi'
 import { log, setUserApiList, setUserApiStatus } from '@/core/userApi'
+import { updateSetting } from '@/config/setting'
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
 import { fetchData } from './request'
@@ -252,5 +253,17 @@ export default async(setting: LX.AppSetting) => {
     }
   })
 
-  setUserApiList(await getUserApiList())
+  const userApiList = await getUserApiList()
+  setUserApiList(userApiList)
+
+  // 首次启动自动导入内置默认在线源（社区维护脚本）。
+  // 激活交给用户手动操作（设置 → 音源），不自动选择第一个源。
+  // 仅执行一次：通过 common.isUserApiDefaultsImported 标记，避免用户删除全部源后被反复重新塞入。
+  if (!settingState.setting['common.isUserApiDefaultsImported']) {
+    void updateSetting({ 'common.isUserApiDefaultsImported': true })
+    if (userApiList.length == 0) {
+      const { importDefaultUserApiSources } = await import('@/core/userApi')
+      await importDefaultUserApiSources().catch(() => null)
+    }
+  }
 }

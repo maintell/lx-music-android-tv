@@ -318,7 +318,7 @@ plugins/player handlePlayMusic（无真实 URL）
 - 下载项（`LX.Download.ListItem`，含 `progress` 字段与 `metadata.musicInfo`）在播放链路中与普通歌曲**统一**：`core/music/index.ts` 按 `'progress' in musicInfo` 分流到 `download.ts`。
 - `download.ts` 实际**委托在线源**：`getMusicUrl/getPicUrl/getLyricInfo` 均基于 `musicInfo.metadata.musicInfo` 走 `online.ts`（缓存优先）。注意当前代码未实现"读下载文件本地播放"路径（对应逻辑被注释）。
 - 播放"稍后播放"列表中的下载项同理：`PlayMusic` 联合类型涵盖下载项。
-- **已知限制**：`core/player/playInfo.ts` 的 `getList` 对 `LIST_IDS.DOWNLOAD` 直接返回 `[]`，即 `playListById(listId, id)` 无法直接以 `'download'` 作为列表源起播；下载列表的播放需先经其它列表/稍后播放路径（待核对，见 §14）。
+- **已知限制（已核对源码）**：`core/player/playInfo.ts` 的 `getList` 对 `LIST_IDS.DOWNLOAD` 直接返回 `[]`（`return listId == LIST_IDS.DOWNLOAD ? [] : getListMusicSync(listId)`），因此 `playListById('download', id)` 无法通过列表源解析歌曲——这是**有意设计**：下载列表不是"可播放源列表"，单个下载项是通过 `LX.Download.ListItem` 的 `'progress' in musicInfo` 分流（`core/music/download.ts` 委托在线地址播放），而非经 `playListById` 起播。下载列表的连续播放需先经其它列表 / 稍后播放路径。
 - 列表变更联动：`watchList.ts` 监听 `app_event.myListMusicUpdate` / `downloadListUpdate`，节流后 `updatePlayIndex()` 重算下标；当前播放歌曲被移出列表（`playIndex < 0`）→ 自动 `playNext(true)`。
 
 ## 13. 常见问题排查
@@ -350,9 +350,9 @@ plugins/player handlePlayMusic（无真实 URL）
 | `player.isShowNotificationImage` | — | 通知栏封面 |
 | `player.isShowBluetoothFullLyric` / `player.isShowBluetoothLyric` | — | 蓝牙完整歌词 / 蓝牙歌词开关 |
 
-## 14. 需人工核对的疑点
+## 14. 需注意的遗留点
 
-- `core/player/playInfo.ts` 的 `getList` 对下载列表返回 `[]`，`playListById` 起播下载列表会找不到歌曲——是设计如此（下载列表播放走其它入口）还是遗留，需确认。
+- `core/player/playInfo.ts` 的 `getList` 对下载列表返回 `[]`（见 §12 已核对：下载项不通过列表源播放，而是经 `Download.ListItem` 分流）。
 - `core/music/download.ts` 的"读下载文件本地播放"路径整体注释（`getDownloadFilePath` 未启用），下载歌曲播放实际仍走在线 URL。
 - `plugins/player/service.ts` 存在大量注释旧逻辑（design-doc §8 风险 2），重构时需以 `core/player` 当前行为为准。
 - `init/player/playStatus.ts` 中 `buttons` 对象与 `setButtons` 仅剩 `updateMetaData` 副作用，桌面版残留逻辑较多，改动时注意回归通知栏按钮行为。
