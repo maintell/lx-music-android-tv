@@ -4,6 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <!-- 遥控器「选中/焦点」高亮：Android 原生 defaultFocusHighlight 焦点框由 colorControlHighlight
+             着色，并以约 25% 系统透明度绘制。低彩度色（灰/浅绿）在此透明度下对比不足；
+             高彩度色（青色）在浅色/深色主题下均清晰可见。Cyan A400 醒目且与绿意主题协调，
+             作为遥控器 D-pad 选中态的可靠指示（不依赖 RN 焦点事件）。 -->
+        <item name="android:defaultFocusHighlightEnabled">true</item>
+        <item name="android:colorControlHighlight">#00E5FF</item>
     </style>
 
 </resources>

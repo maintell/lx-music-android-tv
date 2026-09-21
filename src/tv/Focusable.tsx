@@ -12,7 +12,7 @@
  *  - focusBorderStyle 焦点态边框样式构造器（供自定义组件复用）。
  */
 
-import { memo, useState, type ReactNode } from 'react'
+import { memo, useState, useMemo, type ReactNode } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps, type ViewStyle } from 'react-native'
 
 import { useTheme } from '@/store/theme/hook'
@@ -24,19 +24,26 @@ export const KEYCODE_MENU = 82
 /** TV 方向键/菜单键事件的轻量类型（RN 0.73 类型未导出原生 keyEvent 细节） */
 export type TVKeyEvent = { nativeEvent: { keyCode: number } }
 
-/** 生成「获得焦点时」叠加的主题色边框样式；手机端或失焦时返回空对象。 */
+/**
+ * 生成「获得焦点时」叠加的主题色边框样式；手机端或失焦时返回空对象。
+ *
+ * 说明（当前为 stock react-native 0.73）：Android 原生层仅对 TextInput 派发焦点事件，
+ * 故本构造器在 TV 上实际只在 Input.tsx（基于 TextInput）生效；Pressable/TouchableOpacity
+ * （Button / Focusable）的 onFocus 不触发。边框取更深的主色（c-primary-dark-200：亮色主题下
+ * 更暗、暗色主题下更亮 → 两种主题下都与背景形成更强对比），并加粗、加强发光，让选中态醒目。
+ */
 export const focusBorderStyle = (theme: ReturnType<typeof useTheme>, focused: boolean): ViewStyle => {
   if (!focused) return {}
-  const color = theme['c-primary']
+  const color = theme['c-primary-dark-200']
   return {
-    borderWidth: 3,
+    borderWidth: 4,
     borderColor: color,
-    borderRadius: 4,
+    borderRadius: 6,
     shadowColor: color,
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.45,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    elevation: 8,
   }
 }
 
@@ -54,19 +61,25 @@ export interface FocusableProps extends TouchableOpacityProps {
 }
 
 /**
- * TV 焦点容器：使用 TouchableOpacity 确保 OK 键触发 onPress、MENU 键触发 onMenu。
- * RN 0.73 在 Android TV 上不提供 onFocus/onBlur/onKeyDown 回调，因此焦点边框
- * 样式（focusBorderStyle）虽已声明但暂无法通过 JS 事件动态切换。
- * 后续可考虑通过 native 模块或升级 RN 版本（react-native-tvos）解决。
+ * TV 焦点容器：使用 TouchableOpacity（经过验证在 stock RN 0.73 上可被 D-pad 焦点命中，
+ * Pressable 在该环境下会丢失焦点），叠加 android_ripple 提供主题色焦点态填充 +
+ * 系统默认 defaultFocusHighlight 焦点框兜底（见 styles.xml）。OK 键触发 onPress、MENU 键触发 onMenu。
+ * 注意：RN 0.73 原生层仅对 TextInput 派发焦点事件，TouchableOpacity 的 onFocus 不触发，
+ * 故动态边框(focusBorderStyle)暂未启用；焦点可见性依赖原生高亮。后续升级 react-native-tvos
+ * 可通过 onFocus/onBlur 恢复动态边框。
  */
 const Focusable = memo(({ onMenu, onKeyDown, showBorder = true, hasTVPreferredFocus, children, style, ...props }: FocusableProps) => {
   const theme = useTheme()
-  const [focused, setFocused] = useState(false)
+  const [focused] = useState(false)
   const borderStyle: ViewStyle = showBorder ? focusBorderStyle(theme, focused) : {}
+  const ripple = useMemo(() => ({
+    color: theme['c-primary-dark-200-alpha-200'],
+  }), [theme])
 
   const extraProps = {
     focusable: true,
     hasTVPreferredFocus: hasTVPreferredFocus,
+    android_ripple: ripple,
   }
 
   return (

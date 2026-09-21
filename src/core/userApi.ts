@@ -75,6 +75,9 @@ export const importDefaultUserApiSources = async(): Promise<string | null> => {
       writeLog.warn(`add default user api failed: ${url}\n${err.message}`)
       continue
     }
+    // 同步更新响应式 store，使弹窗/设置列表立即刷新（无需重启 App）。
+    // 若漏掉这一步，state.list 保持不变，下一次点击会重建去重集合并重复导入同名源。
+    action.addUserApi(info)
     importedNames.add(info.name)
     if (!firstId) firstId = info.id
   }

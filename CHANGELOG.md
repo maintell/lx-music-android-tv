@@ -6,6 +6,16 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [2.1.1](https://github.com/maintell/lx-music-android-tv/compare/v2.1.0...v2.1.1) - 2026-09-26
+
+修复自定义源导入与遥控器焦点高亮问题。
+
+### 修复
+- 修复自定义源管理「导入默认源」二次点击会重复导入同名源且列表不刷新的问题（导入时同步更新 store，列表与弹窗即时刷新）。
+
+### 变更
+- 遥控器焦点高亮调整为高对比青色（#00E5FF），并加深按钮、复选框的波纹与边框反馈，提升选中态辨识度。
+
 ## [2.1.0](https://github.com/maintell/lx-music-android-tv/compare/v2.0.0...v2.1.0) - 2026-09-19
 
 新增内置默认在线源能力（社区维护的自定义音源），并配套开发者文档修订。

@@ -10,6 +10,7 @@ import {
 import { Icon } from '../Icon'
 import { createStyle } from '@/utils/tools'
 import { scaleSizeW } from '@/utils/pixelRatio'
+import { useTheme } from '@/store/theme/hook'
 
 export interface Props {
   /**
@@ -52,6 +53,7 @@ const Checkbox = ({
   tintColors,
   ...rest
 }: Props) => {
+  const theme = useTheme()
   const checked = status === 'checked'
   const indeterminate = status === 'indeterminate'
 
@@ -89,6 +91,7 @@ const Checkbox = ({
       accessibilityRole="checkbox"
       accessibilityState={{ disabled, checked }}
       accessibilityLiveRegion="polite"
+      android_ripple={{ color: theme['c-primary-dark-200-alpha-200'] }}
       style={{ ...styles.container, padding: PADDING, marginLeft: -PADDING }}
     >
       <Icon

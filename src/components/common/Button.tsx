@@ -2,6 +2,7 @@ import { useTheme } from '@/store/theme/hook'
 import { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { Pressable, type PressableProps, StyleSheet, type View, type ViewProps } from 'react-native'
 import { IS_TV } from '@/tv/constants'
+import { focusBorderStyle } from '@/tv/Focusable'
 // import { AppColors } from '@/theme'
 
 
@@ -25,7 +26,7 @@ export default forwardRef<BtnType, BtnProps>(({ ripple: propsRipple = {}, disabl
   const btnRef = useRef<View>(null)
   const [focused, setFocused] = useState(false)
   const ripple = useMemo(() => ({
-    color: theme['c-primary-light-200-alpha-700'],
+    color: theme['c-primary-dark-200-alpha-200'],
     ...propsRipple,
   }), [theme, propsRipple])
 
@@ -37,9 +38,8 @@ export default forwardRef<BtnType, BtnProps>(({ ripple: propsRipple = {}, disabl
 
   // Android TV：获得焦点时叠加主题色边框 + 阴影，提供醒目可见的焦点反馈
   // 3px 宽度 + 发光阴影确保在各种主题下都清晰可辨（反色效果）
-  const focusStyle = focused
-    ? { borderWidth: 3, borderColor: theme['c-primary'], borderRadius: 4, elevation: 6, shadowColor: theme['c-primary'], shadowOffset: { width: 0, height: 0 } as const, shadowOpacity: 0.45, shadowRadius: 6 }
-    : {}
+  // Android TV：获得焦点时叠加更醒目的主题色边框（复用 focusBorderStyle，单一来源）
+  const focusStyle = focusBorderStyle(theme, focused)
 
   return (
     <Pressable
